@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct ExpenseItem: Identifiable, Codable {
-    let id = UUID()
+    private(set) var id = UUID()
     let name: String
     let type: String
     let amount: Int
@@ -54,11 +54,12 @@ struct ContentView: View {
 
                             Spacer()
                             Text("$\(item.amount)")
+                                .foregroundColor(getColorForValue(for: item.amount))
                         }
                 }
                 .onDelete(perform: removeItems)
             }
-            .navigationBarItems(trailing:
+            .navigationBarItems( leading: EditButton(), trailing:
                 Button(action: {
                     self.showingAddExpense = true
                 }) {
@@ -73,6 +74,16 @@ struct ContentView: View {
     
     func removeItems(at offsets: IndexSet){
         expenses.items.remove(atOffsets: offsets)
+    }
+    
+    func getColorForValue(for amount: Int) -> Color {
+        if(amount < 10){
+            return Color.blue
+        } else if ( amount < 100 ){
+            return Color.green
+        } else {
+            return Color.red
+        }
     }
 }
 
